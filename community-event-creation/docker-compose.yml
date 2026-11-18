@@ -1,0 +1,25 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - api-data:/data
+    restart: unless-stopped
+
+  event-creation:
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+      args:
+        APP: event-creation
+        VITE_API_URL: http://localhost:4000
+    ports:
+      - "8081:80"
+    depends_on: [api]
+    restart: unless-stopped
+
+volumes:
+  api-data:

@@ -1,0 +1,31 @@
+{
+  "name": "community-event-creation",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "apps/event-creation",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev -w @community/api",
+    "dev:app": "npm run dev -w @community/event-creation",
+    "dev": "concurrently -n api,app -c gray,blue \"npm:dev:api\" \"npm:dev:app\"",
+    "build": "npm run build -w @community/event-creation",
+    "lint": "npm run lint -w @community/event-creation"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.14",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "concurrently": "^9.0.1",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3"
+  }
+}
