@@ -1,5 +1,0 @@
-node_modules
-dist
-.env*
-services/api/data
-.DS_Store
