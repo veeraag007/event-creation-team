@@ -1,0 +1,23 @@
+/* Shared styling for attendee authentication, profile and event navigation. */
+.page { min-height: 100vh; background: #080d1c; color: #f6f7ff; padding: 24px; }
+.header { max-width: 1100px; margin: auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding-bottom: 24px; border-bottom: 1px solid #293654; }
+.header a { color: #c4b5fd; }
+.nav { display: flex; gap: 20px; flex-wrap: wrap; }
+.card { max-width: 480px; margin: 56px auto; padding: 32px; background: #11192c; border: 1px solid #293654; border-radius: 20px; }
+.card h1 { font-size: 30px; margin: 10px 0; }
+.card p, .muted { color: #aebbd5; line-height: 1.6; }
+.form { display: grid; gap: 16px; margin: 24px 0; }
+.form label { display: grid; gap: 8px; font-size: 14px; }
+.form input { width: 100%; box-sizing: border-box; padding: 13px; border-radius: 9px; background: #080d1c; border: 1px solid #43516c; color: white; font: inherit; }
+.form input:focus { outline: 2px solid #a99aff; }
+.primary { background: #5942e7; border: 0; padding: 13px 18px; color: white; border-radius: 10px; font: inherit; font-weight: 700; text-align: center; cursor: pointer; }
+.primary:disabled { opacity: .65; cursor: wait; }
+.link { color: #c4b5fd; }
+.error { color: #ffb4c1 !important; }
+.status { color: #9aefd3 !important; }
+.workspace { max-width: 1100px; margin: 48px auto; }
+.workspace h1 { font-size: clamp(28px, 4vw, 42px); margin: 0 0 16px; }
+.panel { background: #11192c; border: 1px solid #293654; padding: 24px; border-radius: 16px; margin-top: 24px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px; }
+.banner { min-height: 240px; margin-top: 24px; border-radius: 16px; background-color: #11192c; background-position: center; background-size: cover; }
+@media (max-width: 500px) { .page { padding: 16px; } .card { padding: 22px; margin: 28px auto; } }

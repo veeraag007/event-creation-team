@@ -2,7 +2,6 @@
 
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 
 const sectors = [
@@ -26,9 +25,11 @@ export default function Home() {
           <strong>Community 360</strong>
           <small>EVENT CREATION</small>
         </div>
-        <a className="setup" href="/admin-registration">
-          Set up your organization
-        </a>
+        <div className="entry">
+          <a href="/admin-login">Admin Login</a>
+          <a href="/user-login">Attendee Login</a>
+          <a className="setup" href="/admin-registration">Set up your organization</a>
+        </div>
       </header>
 
       <main>
@@ -80,6 +81,8 @@ export default function Home() {
           border-bottom: 1px solid #28334c;
         }
         small { display: block; color: #b7adff; }
+        .entry { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .entry a { color: #c4b5fd; }
         main {
           display: grid;
           grid-template-columns: 3fr 2fr;
