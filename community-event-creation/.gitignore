@@ -3,3 +3,7 @@ dist
 .env*
 services/api/data
 .DS_Store
+
+**/target/
+*.zip
+services/event-api/startup-error.txt
