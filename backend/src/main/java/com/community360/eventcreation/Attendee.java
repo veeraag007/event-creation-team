@@ -16,6 +16,7 @@ public class Attendee {
     private String passwordHash;
     @Column(length = 30)
     private String phone;
+    private Boolean emailVerified;
 
     protected Attendee() {}
 
@@ -24,6 +25,7 @@ public class Attendee {
         this.fullName = fullName;
         this.email = email;
         this.passwordHash = passwordHash;
+        this.emailVerified = true;
     }
 
     public String getId() { return id; }
@@ -31,6 +33,8 @@ public class Attendee {
     public String getEmail() { return email; }
     public String getPasswordHash() { return passwordHash; }
     public String getPhone() { return phone; }
+    public boolean isEmailVerified() { return Boolean.TRUE.equals(emailVerified); }
+    public void markEmailVerified() { emailVerified = true; }
 
     public void updateProfile(String fullName, String phone) {
         this.fullName = fullName;

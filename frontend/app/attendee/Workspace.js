@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { attendeeRequest } from './api';
 import styles from './account.module.css';
 
@@ -34,8 +35,8 @@ export default function Workspace({ children }) {
 
   return <div className={styles.page}>
     <header className={styles.header}>
-      <a href="/">Community 360</a>
-      <nav className={styles.nav}><a href="/explore">Explore Events</a><a href="/my-events">My Events</a><a href="/profile">Profile</a><button className={styles.primary} disabled={loggingOut} onClick={logout}>Sign out</button></nav>
+      <Link href="/" className={styles.brand}><span className={styles.logo}>C</span><span>Community 360<small>EVENT CREATION</small></span></Link>
+      <nav className={styles.nav}><Link href="/explore">Explore Events</Link><Link href="/my-events">My Events</Link><Link href="/profile">Profile</Link><button className={styles.primary} disabled={loggingOut} onClick={logout}>Sign out</button></nav>
     </header>
     <main className={styles.workspace}>
       {error && <p role="alert" className={styles.error}>{error}</p>}

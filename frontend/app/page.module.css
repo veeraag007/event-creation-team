@@ -1,150 +1,23 @@
-.page {
-  --background: #fafafa;
-  --foreground: #fff;
-
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
-
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-geist-sans);
-  background-color: var(--background);
-}
-
-.main {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
-}
-
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 24px;
-}
-
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
-}
-
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
-  color: var(--text-secondary);
-}
-
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.ctas {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
-}
-
-.ctas a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
-  cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
-}
-
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
-  gap: 8px;
-}
-
-a.secondary {
-  border-color: var(--button-secondary-border);
-}
-
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
-}
-
-@media (max-width: 600px) {
-  .main {
-    padding: 48px 24px;
-  }
-
-  .intro {
-    gap: 16px;
-  }
-
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
-
-  .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
-  }
-}
-
-.code {
-  font-family: var(--font-geist-mono);
-  font-size: 0.9em;
-  background: color-mix(in srgb, currentColor 8%, transparent);
-  padding: 0.1em 0.4em;
-  border-radius: 6px;
-}
+/* Responsive dark landing page and animated event illustrations, with no external assets. */
+.page{min-height:100vh;background:radial-gradient(ellipse at 78% 35%,#24174e 0%,#0b1124 38%,#080d1c 70%);color:#f5f6ff;padding:0 24px;display:flex;flex-direction:column;overflow:hidden}
+.header,.main,.footer{width:100%;max-width:1200px;margin:0 auto}
+.header{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:25px 0;border-bottom:1px solid #28334c}
+.brand{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:800}.brand small{display:block;color:#b7adff;font-size:10px;letter-spacing:2px;margin-top:4px}
+.logo{width:46px;height:46px;display:grid;place-items:center;background:linear-gradient(135deg,#7753ff,#3075fc);border-radius:14px;font-size:26px;box-shadow:0 8px 30px #6554ff44}
+.nav{display:flex;gap:12px;flex-wrap:wrap}.primary,.secondary{display:inline-flex;align-items:center;justify-content:center;padding:13px 19px;border-radius:10px;font-size:14px;font-weight:700;transition:transform .2s,box-shadow .2s}
+.secondary{border:1px solid #6253a7;background:#191831;color:#ddd5ff}.primary{background:linear-gradient(130deg,#7157f5,#5242d9);border:1px solid #8878ff;color:white}
+.primary:hover,.secondary:hover{transform:translateY(-2px);box-shadow:0 6px 26px #7058ff60}.primary:focus-visible,.secondary:focus-visible{outline:3px solid #bcaaff;outline-offset:4px}
+.main{flex:1;display:grid;align-items:center}.hero{display:grid;grid-template-columns:1.12fr 1fr;align-items:center;gap:48px;padding:64px 0 80px}.copy{animation:appear .7s ease-out both}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1.5px;font-weight:700;border:1px solid #493b82;padding:9px 12px;border-radius:30px;color:#c9baff;background:#211b3a}.badge i,.calendarFoot i{width:8px;height:8px;background:#a58cff;border-radius:50%;box-shadow:0 0 14px #976aff}
+.copy h1{font-size:clamp(36px,4.5vw,64px);line-height:1.08;letter-spacing:-2px;margin:22px 0}.copy h1 span{color:#b9a9ff}.tagline{font-size:clamp(18px,2vw,23px);font-weight:700;margin:0 0 12px}.description{color:#acb9d1;font-size:17px;line-height:1.7;max-width:470px}
+.features{display:grid;gap:16px;margin-top:32px}.features article{display:flex;align-items:center;gap:14px}.features h2{font-size:16px;margin:0 0 4px}.features p{font-size:14px;color:#acb9d1;line-height:1.55}
+.icon{display:grid;place-items:center;flex-shrink:0;width:44px;height:44px;border-radius:12px;background:#302552;color:#c7b7ff}.icon svg,.calendarTop svg{width:23px;height:23px}
+.visual{position:relative;min-height:415px;display:grid;place-items:center;isolation:isolate}.orbit,.orbit2{position:absolute;width:90%;aspect-ratio:1;border-radius:50%;border:1px solid #a38cf62c;z-index:-1}.orbit2{width:68%;border-style:dashed;animation:rotate 70s linear infinite}
+.calendar{width:75%;max-width:350px;padding:22px;background:linear-gradient(150deg,#202844,#131a30);border:1px solid #6a5a9b;border-radius:22px;box-shadow:0 25px 70px #03061599;transform:rotate(-7deg);animation:calendarFloat 7s ease-in-out infinite}
+.calendarTop{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #39445c;padding-bottom:17px;font-size:15px;font-weight:700}.calendarTop span{display:flex;align-items:center;gap:8px}.calendarTop svg,.calendarTop b{color:#b9a9ff}.week,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}.week{margin:18px 0 8px;color:#aab5d2;font-size:12px}.days span{padding:8px 0;font-size:12px;border-radius:8px;background:#11182b}.days .dayActive{background:#7156ef;color:white;box-shadow:0 3px 14px #6951ef55}.calendarFoot{display:flex;align-items:center;gap:9px;margin-top:16px;font-size:12px;color:#b9c4dc}
+.ticket,.people{position:absolute;display:flex;align-items:center;gap:12px;background:#171f36f5;border:1px solid #65578e;padding:15px;border-radius:15px;box-shadow:0 18px 40px #03061588}.ticket{right:0;top:17%;transform:rotate(8deg);animation:ticketFloat 6s ease-in-out infinite}.ticket div,.people div{display:grid;gap:5px}.ticket small{font-size:10px;letter-spacing:1px;color:#b9a9ff}.ticket strong,.people strong{font-size:14px}.ticket div span,.people div span{color:#aab8d0;font-size:11px}.barcode{width:25px;height:45px;border-left:1px dashed #7563a6;padding-left:8px;background:repeating-linear-gradient(90deg,#aaa2d9 0 1px,transparent 1px 4px);background-clip:content-box}.people{left:0;bottom:7%;animation:peopleFloat 8s ease-in-out infinite}
+.footer{border-top:1px solid #28334c;padding:20px 0;color:#aab5d2;font-size:13px}.footer span{color:#a991ff;margin:0 6px}
+@keyframes appear{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}@keyframes rotate{to{transform:rotate(360deg)}}@keyframes calendarFloat{50%{transform:translateY(-12px) rotate(-5deg)}}@keyframes ticketFloat{50%{transform:translateY(10px) rotate(6deg)}}@keyframes peopleFloat{50%{transform:translateY(-9px)}}
+@media(max-width:850px){.hero{grid-template-columns:1fr;gap:12px;padding:42px 0}.visual{max-width:500px;width:100%;margin:auto;min-height:360px}.copy h1{letter-spacing:-1.4px}}
+@media(max-width:460px){.page{padding:0 16px}.header{padding:18px 0}.nav{width:100%;gap:8px}.nav a{flex:1;padding:12px 8px;font-size:13px}.visual{min-height:315px}.calendar{width:86%;padding:15px}.ticket,.people{padding:9px;gap:8px}.ticket .icon,.people .icon{width:32px;height:32px}.ticket strong,.people strong{font-size:12px}.ticket{top:10%}.people{bottom:4%}}
+@media(prefers-reduced-motion:reduce){.copy,.calendar,.orbit2,.ticket,.people{animation:none}.primary,.secondary{transition:none}}

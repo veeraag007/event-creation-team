@@ -1,138 +1,43 @@
-// Welcome page for the Community 360 Event Creation SaaS application
+// Public landing page with two login paths and an animated event illustration.
+import Link from 'next/link';
+import styles from './page.module.css';
 
-'use client';
-
-import { useState } from 'react';
-
-const sectors = [
-  { name: 'Professional & Business', sample: 'Apex Innovation Hub', members: 'Teams & tenants', venue: 'Conference Hall' },
-  { name: 'Education & Learning', sample: 'Northstar College', members: 'Students & faculty', venue: 'Main Auditorium' },
-  { name: 'Residential & Local', sample: 'Greenwood Residency', members: 'Residents', venue: 'Community Hall' },
-  { name: 'Customer & Brand', sample: 'Studio Circle', members: 'Customers & members', venue: 'Launch Space' },
-  { name: 'Interest & Hobby', sample: 'The Makers Guild', members: 'Creators & members', venue: 'Workshop Studio' },
-  { name: 'Sports & Fitness', sample: 'Summit Sports Club', members: 'Athletes & coaches', venue: 'Indoor Arena' },
-  { name: 'Social & Networking', sample: 'City Connect', members: 'Members & guests', venue: 'Grand Ballroom' },
-  { name: 'Nonprofit', sample: 'Open Hands Foundation', members: 'Volunteers & donors', venue: 'Community Centre' },
-];
-
+function Icon({ type }) {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    {type === 'calendar' ? <><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 10h18m-13 5h3m3 0h3m-9 3h3"/></>
+      : type === 'ticket' ? <><path d="M3 7h18v4a2 2 0 0 0 0 4v3H3v-3a2 2 0 0 0 0-4V7Z"/><path d="M15 7v3m0 4v4"/></>
+      : <><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m2-15a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 4v2"/></>}
+  </svg>;
+}
 export default function Home() {
-  const [sector, setSector] = useState(sectors[0]);
-
-  return (
-    <div className="welcome">
-      <header>
-        <div>
-          <strong>Community 360</strong>
-          <small>EVENT CREATION</small>
+  return <div className={styles.page}>
+    <header className={styles.header}>
+      <Link href="/" className={styles.brand}><span className={styles.logo}>C</span><span>Community 360<small>EVENT CREATION</small></span></Link>
+      <nav aria-label="Account access" className={styles.nav}><Link className={styles.secondary} href="/admin-login">Admin Login →</Link><Link className={styles.primary} href="/user-login">Attendee Login →</Link></nav>
+    </header>
+    <main className={styles.main}><section className={styles.hero}>
+      <div className={styles.copy}>
+        <span className={styles.badge}><i/> THE CONNECTED EVENT PLATFORM</span>
+        <h1>One Unified SaaS for <span>Every Community Vertical.</span></h1>
+        <p className={styles.tagline}>Organize. Discover. Book. All in one platform.</p>
+        <p className={styles.description}>Bring people together through seamless event creation and memorable experiences.</p>
+        <div className={styles.features}>
+          <article><span className={styles.icon}><Icon type="calendar"/></span><div><h2>Organize events</h2><p>Create and manage events for your community.</p></div></article>
+          <article><span className={styles.icon}><Icon type="ticket"/></span><div><h2>Discover &amp; book</h2><p>Find experiences and manage your registrations.</p></div></article>
         </div>
-        <div className="entry">
-          <a href="/admin-login">Admin Login</a>
-          <a href="/user-login">Attendee Login</a>
-          <a className="setup" href="/admin-registration">Set up your organization</a>
+      </div>
+      <div className={styles.visual} aria-hidden="true">
+        <div className={styles.orbit}/><div className={styles.orbit2}/>
+        <div className={styles.calendar}>
+          <div className={styles.calendarTop}><span><Icon type="calendar"/> Event calendar</span><b>✦</b></div>
+          <div className={styles.week}>{['M','T','W','T','F','S','S'].map((day,i)=><span key={i}>{day}</span>)}</div>
+          <div className={styles.days}>{Array.from({length:28},(_,i)=><span key={i} className={[4,11,18,24].includes(i)?styles.dayActive:''}>{i+1}</span>)}</div>
+          <div className={styles.calendarFoot}><i/> Plan your next experience</div>
         </div>
-      </header>
-
-      <main>
-        <section>
-          <h1>One Unified SaaS for Every Community Vertical</h1>
-          <p>Choose an organization type to see how its event workspace could look.</p>
-
-          <h2>Choose a sector to preview</h2>
-          <div className="sectors">
-            {sectors.map((item) => (
-              <button
-                type="button"
-                key={item.name}
-                aria-pressed={sector.name === item.name}
-                onClick={() => setSector(item)}
-              >
-                {item.name}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <aside aria-label="Workspace preview" aria-live="polite">
-          <small>Sample workspace</small>
-          <h2>{sector.sample}</h2>
-          <p>{sector.name}</p>
-          <dl>
-            <div><dt>Members</dt><dd>{sector.members}</dd></div>
-            <div><dt>Example venue</dt><dd>{sector.venue}</dd></div>
-          </dl>
-        </aside>
-      </main>
-
-      <style jsx>{`
-        .welcome {
-          min-height: 100vh;
-          padding: 0 24px;
-          background: #080d1c;
-          color: #f6f7ff;
-        }
-        header, main { max-width: 1150px; margin: 0 auto; }
-        header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          gap: 16px;
-          padding: 24px 0;
-          border-bottom: 1px solid #28334c;
-        }
-        small { display: block; color: #b7adff; }
-        .entry { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
-        .entry a { color: #c4b5fd; }
-        main {
-          display: grid;
-          grid-template-columns: 3fr 2fr;
-          align-items: start;
-          gap: 32px;
-          padding: 64px 0;
-        }
-        h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
-        section p { margin: 16px 0 28px; color: #aebbd5; }
-        h2 { font-size: 1.1rem; margin: 8px 0 12px; }
-        .sectors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-        button, aside {
-          background: #121b30;
-          color: inherit;
-          border: 1px solid #344362;
-          border-radius: 12px;
-        }
-        button {
-          min-height: 80px;
-          padding: 12px;
-          text-align: left;
-          font: inherit;
-          font-size: .9rem;
-          cursor: pointer;
-        }
-        button[aria-pressed='true'] { background: #282050; border-color: #a997ff; }
-        aside { padding: 24px; }
-        dl { margin-top: 20px; }
-        dl div { display: flex; justify-content: space-between; gap: 12px; margin: 10px 0; }
-        dt { color: #aebbd5; }
-        dd { margin: 0; text-align: right; }
-        @media (max-width: 800px) {
-          main { grid-template-columns: 1fr; padding: 32px 0; }
-        }
-        @media (max-width: 520px) {
-          .sectors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        }
-      `}</style>
-
-      <style jsx global>{`
-        .welcome .setup {
-          display: inline-block;
-          padding: 12px 16px;
-          border-radius: 10px;
-          background: #5942e7;
-          color: white;
-          font-weight: 700;
-          text-decoration: none;
-        }
-      `}</style>
-    </div>
-  );
+        <div className={styles.ticket}><span className={styles.icon}><Icon type="ticket"/></span><div><small>EVENT PASS</small><strong>You&apos;re invited!</strong><span>Discover · Connect</span></div><div className={styles.barcode}/></div>
+        <div className={styles.people}><span className={styles.icon}><Icon type="people"/></span><div><strong>Connected communities</strong><span>One shared experience</span></div></div>
+      </div>
+    </section></main>
+    <footer className={styles.footer}>Community 360 <span>·</span> Events that bring people together.</footer>
+  </div>;
 }

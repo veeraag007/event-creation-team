@@ -20,17 +20,21 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:3001", allowCredentials = "true")
 public class AttendeeController {
     private final AttendeeRepository repository;
+    private final EmailVerificationService verification;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    public AttendeeController(AttendeeRepository repository) {
+    public AttendeeController(AttendeeRepository repository, EmailVerificationService verification) {
         this.repository = repository;
+        this.verification = verification;
     }
 
     public record Signup(@NotBlank @Size(max = 100) String fullName,
                          @NotBlank @Email @Size(max = 254) String email,
-                         @NotBlank @Size(min = 8, max = 72) String password) {}
+                         @NotBlank @Size(min = 8, max = 72) String password,
+                         @Size(max = 6) String code) {}
     public record Login(@NotBlank @Email @Size(max = 254) String email,
-                        @NotBlank @Size(max = 72) String password) {}
+                        @NotBlank @Size(max = 72) String password,
+                        @Size(max = 6) String code) {}
     public record Profile(@NotBlank @Size(max = 100) String fullName,
                           @Size(max = 30) String phone) {}
     public record PasswordChange(@NotBlank @Size(max = 72) String currentPassword,
@@ -62,15 +66,23 @@ public class AttendeeController {
             return null;
         }
         Attendee attendee = repository.findById(id).orElse(null);
-        if (attendee == null) session.invalidate();
+        if (attendee == null || !attendee.isEmailVerified()) {
+            session.invalidate();
+            return null;
+        }
         return attendee;
     }
 
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<?> register(@Valid @RequestBody Signup signup) {
+    public ResponseEntity<?> register(@Valid @RequestBody Signup signup, HttpServletRequest request) {
         if (!passwordFits(signup.password())) return error(400, "Password is too long.");
         String email = normalize(signup.email());
         if (repository.existsByEmail(email)) return error(409, "Email already registered.");
+        if (signup.code() == null || signup.code().isBlank()) {
+            verification.send("attendee-signup", email, request.getRemoteAddr());
+            return ResponseEntity.accepted().body(Map.of("verificationRequired", true, "email", email));
+        }
+        verification.verify("attendee-signup", email, signup.code());
         try {
             repository.saveAndFlush(new Attendee(UUID.randomUUID().toString(),
                     signup.fullName().trim(), email, encoder.encode(signup.password())));
@@ -86,6 +98,15 @@ public class AttendeeController {
         if (!passwordFits(login.password()) || attendee == null ||
                 !encoder.matches(login.password(), attendee.getPasswordHash())) {
             return error(401, "Invalid email or password.");
+        }
+        if (!attendee.isEmailVerified()) {
+            if (login.code() == null || login.code().isBlank()) {
+                verification.send("attendee-login", attendee.getEmail(), request.getRemoteAddr());
+                return ResponseEntity.accepted().body(Map.of("verificationRequired", true, "email", attendee.getEmail()));
+            }
+            verification.verify("attendee-login", attendee.getEmail(), login.code());
+            attendee.markEmailVerified();
+            repository.saveAndFlush(attendee);
         }
         HttpSession previous = request.getSession(false);
         if (previous != null) previous.invalidate();

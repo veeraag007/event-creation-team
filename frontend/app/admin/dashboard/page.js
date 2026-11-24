@@ -1,8 +1,11 @@
-//temporary admin dashboard page to test the Spring Boot API connection and fetch admin details
+// Session-protected admin handoff page; detailed organization onboarding comes next.
 
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { accountRequest } from '../../attendee/api';
+import styles from '../../attendee/account.module.css';
 
 export default function AdminDashboard() {
   const [admin, setAdmin] = useState(null);
@@ -11,42 +14,31 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function loadAdmin() {
       try {
-        const response = await fetch(
-          'http://localhost:8080/api/admin/me',
-          {
-            credentials: 'include',
-            cache: 'no-store',
-          }
-        );
-
-        if (response.status === 401) {
-          window.location.replace('/admin-login');
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error('Could not load admin details.');
-        }
-
-        setAdmin(await response.json());
-      } catch {
-        setError('Could not connect to Spring Boot.');
+        setAdmin(await accountRequest('admin', '/me'));
+      } catch (failure) {
+        if (failure.status === 401) window.location.replace('/admin-login');
+        else setError(failure.message || 'Could not connect to Spring Boot.');
       }
     }
 
     loadAdmin();
   }, []);
 
-  if (error) return <p>{error}</p>;
-  if (!admin) return <p>Loading workspace...</p>;
-
-  return (
-    <main style={{ padding: 40 }}>
-      <h1>Community 360 – Admin Dashboard</h1>
-      <h2>Welcome, {admin.fullName}</h2>
-      <p>Organization: {admin.organization}</p>
-      <p>Community ID: {admin.communityId}</p>
-      <p>Email: {admin.email}</p>
+  async function logout() {
+    try {
+      await accountRequest('admin', '/logout', 'POST', {});
+      window.location.replace('/admin-login');
+    } catch (failure) { setError(failure.message); }
+  }
+  return <div className={styles.page}>
+    <header className={styles.header}><Link href="/" className={styles.brand}><span className={styles.logo}>C</span>Community 360</Link><button className={styles.primary} onClick={logout}>Sign out</button></header>
+    <main className={styles.workspace}>
+      {error && <p role="alert" className={styles.error}>{error}</p>}
+      {!admin ? !error && <p>Loading workspace…</p> : <>
+        <p className={styles.eyebrow}>ORGANIZER WORKSPACE</p><h1>Welcome, {admin.fullName}</h1>
+        <section className={styles.panel}><h2>Account verified</h2><p>Organization: {admin.organization}</p><p>Community ID: {admin.communityId}</p><p>Email: {admin.email}</p></section>
+        <section className={styles.panel}><h2>Organization onboarding</h2><p className={styles.muted}>Your admin account is ready. Detailed organization setup and dashboard integration are the next modules.</p></section>
+      </>}
     </main>
-  );
+  </div>;
 }

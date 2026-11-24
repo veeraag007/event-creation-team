@@ -1,8 +1,8 @@
-// Sends attendee requests to Spring Boot and keeps the session cookie on each request.
+// Sends account requests to Spring Boot and keeps the session cookie on each request.
 const base = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
-export async function attendeeRequest(path, method = 'GET', data) {
-  const response = await fetch(`${base}/api/attendee${path}`, {
+export async function accountRequest(role, path, method = 'GET', data) {
+  const response = await fetch(`${base}/api/${role}${path}`, {
     method,
     credentials: 'include',
     cache: 'no-store',
@@ -19,4 +19,8 @@ export async function attendeeRequest(path, method = 'GET', data) {
     throw error;
   }
   return result;
+}
+
+export function attendeeRequest(path, method = 'GET', data) {
+  return accountRequest('attendee', path, method, data);
 }

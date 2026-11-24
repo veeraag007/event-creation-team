@@ -4,7 +4,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Workspace from '../../attendee/Workspace';
-import { eventDetails, eventDate, safeWebUrl } from '../../attendee/eventsApi';
+import { eventDetails, eventDate, eventTime, priceLabel, safeWebUrl } from '../../attendee/eventsApi';
 import styles from '../../attendee/account.module.css';
 
 function Details({ id }) {
@@ -19,8 +19,8 @@ function Details({ id }) {
   }, [id]);
   if (error) return <p role="alert" className={styles.error}>{error}</p>;
   if (!event) return <p role="status">Loading event details…</p>;
-  const map = safeWebUrl(event.mapLink);
-  const banner = safeWebUrl(event.bannerUrl);
+  const map = safeWebUrl(event.locationUrl);
+  const banner = safeWebUrl(event.bannerUrl || event.thumbnailUrl);
   return <>
     <a className={styles.link} href="/explore">← All events</a>
     {banner && <div className={styles.banner} role="img" aria-label={`${event.title} banner`} style={{ backgroundImage: `url("${banner.replaceAll('"', '%22')}")` }} />}
@@ -32,14 +32,19 @@ function Details({ id }) {
     <div className={styles.grid}>
       <section className={styles.panel}>
         <h2>Date and time</h2>
-        <p>{eventDate(event.startDateTime)} – {eventDate(event.endDateTime)}</p>
+        <p>{eventDate(event.startDate)} {eventTime(event.startTime)} – {eventDate(event.endDate)} {eventTime(event.endTime)}</p>
+        <p>{event.timezone || 'Timezone to be announced'}</p>
         <h2>Venue</h2>
-        <p>{[event.venueName, event.address, event.city].filter(Boolean).join(', ') || event.venueMode || 'To be announced'}</p>
+        <p>{[event.venueName, event.address, event.city, event.state, event.pincode].filter(Boolean).join(', ') || event.eventType || 'To be announced'}</p>
         {map && <a className={styles.link} href={map} target="_blank" rel="noreferrer">Open venue map</a>}
       </section>
       <section className={styles.panel}>
         <h2>Event information</h2>
-        <p>Speaker: {event.speaker || 'To be announced'}</p>
+        <p>Organizer: {event.organizerName || 'To be announced'}</p>
+        <p>Event type: {event.eventType || 'To be announced'}</p>
+        <p>Ticket price: {priceLabel(event)}</p>
+        <p>Capacity: {event.capacity ?? 'To be announced'}</p>
+        {safeWebUrl(event.organizerWebsite) && <a className={styles.link} href={safeWebUrl(event.organizerWebsite)} target="_blank" rel="noreferrer">Organizer website</a>}
         <p>Ticketing and booking information will be available once the booking service is connected.</p>
       </section>
     </div>

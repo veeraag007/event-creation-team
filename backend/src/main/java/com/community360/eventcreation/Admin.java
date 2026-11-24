@@ -23,6 +23,9 @@ public class Admin {
     @Column(nullable = false)
     private String passwordHash;
 
+    // Nullable for existing accounts; legacy accounts verify at their next login.
+    private Boolean emailVerified;
+
     protected Admin() {
     }
 
@@ -35,6 +38,7 @@ public class Admin {
         this.organization = organization;
         this.email = email;
         this.passwordHash = passwordHash;
+        this.emailVerified = true;
     }
 
     public String getCommunityId() {
@@ -56,4 +60,7 @@ public class Admin {
     public String getPasswordHash() {
         return passwordHash;
     }
+
+    public boolean isEmailVerified() { return Boolean.TRUE.equals(emailVerified); }
+    public void markEmailVerified() { emailVerified = true; }
 }

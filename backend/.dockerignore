@@ -1,0 +1,5 @@
+# Exclude local configuration and build outputs.
+target
+.git
+.idea
+.env*

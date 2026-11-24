@@ -1,8 +1,13 @@
+// Authenticates admins, verifies legacy email addresses and manages the admin session.
 package com.community360.eventcreation;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.CacheControl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,22 +24,25 @@ import java.util.Map;
 public class AdminLoginController {
 
     private final AdminRepository repository;
+    private final EmailVerificationService verification;
 
     private final BCryptPasswordEncoder encoder =
             new BCryptPasswordEncoder(12);
 
-    public AdminLoginController(AdminRepository repository) {
+    public AdminLoginController(AdminRepository repository, EmailVerificationService verification) {
         this.repository = repository;
+        this.verification = verification;
     }
 
     public record LoginRequest(
-            String communityId,
-            String password
+            @NotBlank @Size(max = 254) String communityId,
+            @NotBlank @Size(max = 72) String password,
+            @Size(max = 6) String code
     ) {}
 
     @PostMapping(value = "/login", consumes = "application/json")
     public ResponseEntity<?> login(
-            @RequestBody LoginRequest login,
+            @Valid @RequestBody LoginRequest login,
             HttpServletRequest request) {
 
         if (login.communityId() == null ||
@@ -64,6 +72,15 @@ public class AdminLoginController {
                     ));
         }
 
+        if (!admin.isEmailVerified()) {
+            if (login.code() == null || login.code().isBlank()) {
+                verification.send("admin-login", admin.getEmail(), request.getRemoteAddr());
+                return ResponseEntity.accepted().body(Map.of("verificationRequired", true, "email", admin.getEmail()));
+            }
+            verification.verify("admin-login", admin.getEmail(), login.code());
+            admin.markEmailVerified();
+            repository.saveAndFlush(admin);
+        }
         HttpSession oldSession = request.getSession(false);
 
         if (oldSession != null) {
@@ -75,7 +92,7 @@ public class AdminLoginController {
         session.setAttribute("communityId", admin.getCommunityId());
         session.setMaxInactiveInterval(1800);
 
-        return ResponseEntity.ok(Map.of(
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(Map.of(
                 "communityId", admin.getCommunityId(),
                 "fullName", admin.getFullName(),
                 "organization", admin.getOrganization()
@@ -98,18 +115,25 @@ public class AdminLoginController {
 
         Admin admin = repository.findById(id).orElse(null);
 
-        if (admin == null) {
+        if (admin == null || !admin.isEmailVerified()) {
             session.invalidate();
 
             return ResponseEntity.status(401)
                     .body(Map.of("error", "Please log in."));
         }
 
-        return ResponseEntity.ok(Map.of(
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(Map.of(
                 "communityId", admin.getCommunityId(),
                 "fullName", admin.getFullName(),
                 "organization", admin.getOrganization(),
                 "email", admin.getEmail()
         ));
+    }
+
+    @PostMapping(value = "/logout", consumes = "application/json")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("communityId") != null) session.invalidate();
+        return ResponseEntity.noContent().build();
     }
 }
