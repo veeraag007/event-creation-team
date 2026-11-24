@@ -1,0 +1,350 @@
+.page {
+  min-height: 100vh;
+  background: #050919;
+  color: #f8fafc;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0 30px;
+}
+
+.header {
+  max-width: 1200px;
+  margin: auto;
+  padding: 25px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #243047;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: white;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6045f5, #3181ed);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.brand strong {
+  font-size: 19px;
+}
+
+.brand small {
+  display: block;
+  color: #a99aff;
+  font-size: 12px;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.loginLink {
+  color: #c4b5fd;
+  border: 1px solid #423879;
+  padding: 12px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.loginLink:hover {
+  background: #252047;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 65px;
+  padding: 65px 0;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 30px;
+  color: #aebbd5;
+  text-decoration: none;
+}
+
+.back:hover {
+  color: white;
+}
+
+.intro h1 {
+  font-size: clamp(38px, 4vw, 58px);
+  line-height: 1.12;
+  letter-spacing: -2px;
+  margin: 0 0 24px;
+  font-weight: 800;
+}
+
+.intro h1 span {
+  color: #9a87ff;
+}
+
+.description {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #a3b1cc;
+}
+
+.features {
+  display: grid;
+  gap: 25px;
+  margin-top: 40px;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.feature > span {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: #0c302b;
+  border-radius: 50%;
+  color: #43e8b3;
+}
+
+.feature h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.feature p {
+  margin: 0;
+  color: #99a8c4;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.card {
+  background: #10182b;
+  border: 1px solid #29354d;
+  border-radius: 24px;
+  padding: 36px;
+  box-shadow: 0 20px 60px #00000030;
+}
+
+.card h2 {
+  font-size: 27px;
+  margin: 0 0 10px;
+}
+
+.subtitle {
+  color: #a3b1cc;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.form label {
+  display: grid;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  background: #080e1f;
+  color: #f8fafc;
+  border: 1px solid #35425b;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form input:focus {
+  border-color: #a08aff;
+  box-shadow: 0 0 0 3px #6249e825;
+}
+
+.form input::placeholder {
+  color: #71819e;
+}
+
+.form small {
+  font-size: 12px;
+  color: #93a3be;
+  font-weight: 400;
+}
+
+.passwordField {
+  position: relative;
+}
+
+.passwordField input {
+  padding-right: 70px;
+}
+
+.passwordField button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #b6a7ff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.primaryButton {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px 20px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 11px;
+  background: #5942e7;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.primaryButton:hover {
+  background: #705af5;
+}
+
+.primaryButton:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.error {
+  background: #391b2d;
+  border: 1px solid #873d50;
+  border-radius: 9px;
+  color: #ffb4c1;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.footerText {
+  margin-top: 24px;
+  text-align: center;
+  color: #a3b1cc;
+  font-size: 14px;
+}
+
+.footerText a {
+  color: #b6a7ff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.success {
+  display: grid;
+  gap: 20px;
+  text-align: center;
+}
+
+.success p {
+  color: #a3b1cc;
+  line-height: 1.6;
+}
+
+.successIcon {
+  display: grid;
+  place-items: center;
+  margin: auto;
+  width: 70px;
+  height: 70px;
+  background: #10352c;
+  border: 1px solid #245d4e;
+  border-radius: 50%;
+  color: #43e8b3;
+  font-size: 34px;
+}
+
+.idBox {
+  display: grid;
+  gap: 15px;
+  padding: 20px;
+  background: #080e1f;
+  border: 1px solid #423879;
+  border-radius: 12px;
+}
+
+.idBox small {
+  color: #a3b1cc;
+}
+
+.idBox strong {
+  color: #b6a7ff;
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
+.copyButton {
+  justify-self: center;
+  padding: 9px 18px;
+  border: 1px solid #423879;
+  border-radius: 8px;
+  color: #c4b5fd;
+  background: #201a3c;
+  cursor: pointer;
+}
+
+.footer {
+  max-width: 1200px;
+  margin: auto;
+  border-top: 1px solid #243047;
+  padding: 24px 0;
+  text-align: center;
+  font-size: 13px;
+  color: #8292ad;
+}
+
+@media (max-width: 850px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    padding: 35px 0;
+  }
+
+  .card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 0 16px;
+  }
+
+  .header {
+    flex-wrap: wrap;
+  }
+}

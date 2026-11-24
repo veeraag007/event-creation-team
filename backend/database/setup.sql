@@ -1,0 +1,3 @@
+CREATE SEQUENCE IF NOT EXISTS public.admin_id_seq
+    START WITH 1
+    INCREMENT BY 1;
