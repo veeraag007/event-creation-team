@@ -3,6 +3,7 @@ package com.community360.eventcreation;
 
 import jakarta.persistence.*;
 
+@org.hibernate.annotations.DynamicUpdate
 @Entity
 @Table(name = "attendees")
 public class Attendee {
@@ -17,6 +18,23 @@ public class Attendee {
     @Column(length = 30)
     private String phone;
     private Boolean emailVerified;
+
+    @Column(length = 100)
+    private String location;
+    @Column(length = 240)
+    private String address;
+    private Boolean notificationsEnabled;
+
+    @ElementCollection
+    @CollectionTable(name = "attendee_favorites", joinColumns = @JoinColumn(name = "attendee_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"attendee_id", "event_id"}))
+    @Column(name = "event_id", nullable = false)
+    private java.util.Set<java.util.UUID> favorites = new java.util.HashSet<>();
+
+    public String getLocation() { return location; }
+    public String getAddress() { return address; }
+    public boolean notificationsEnabled() { return Boolean.TRUE.equals(notificationsEnabled); }
+    public void setNotificationsEnabled(boolean enabled) { notificationsEnabled = enabled; }
 
     protected Attendee() {}
 
@@ -36,9 +54,11 @@ public class Attendee {
     public boolean isEmailVerified() { return Boolean.TRUE.equals(emailVerified); }
     public void markEmailVerified() { emailVerified = true; }
 
-    public void updateProfile(String fullName, String phone) {
+    public void updateProfile(String fullName, String phone, String location, String address) {
         this.fullName = fullName;
         this.phone = phone;
+        if (location != null) this.location = location.strip();
+        if (address != null) this.address = address.strip();
     }
 
     public void changePassword(String passwordHash) {

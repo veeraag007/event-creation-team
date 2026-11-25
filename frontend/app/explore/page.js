@@ -2,6 +2,7 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { Heart } from '../attendee/Favorites';
 import Workspace from '../attendee/Workspace';
 import { allPublishedEvents, eventDate, eventTime, priceLabel, safeWebUrl } from '../attendee/eventsApi';
 import { initialFilters, filterEvents, suggestions } from '../attendee/discovery';
@@ -12,7 +13,10 @@ function Select({ label, value, onChange, items }) {
   return <label>{label}<select value={value} onChange={event => onChange(event.target.value)}>{items.map(([id, text]) => <option value={id} key={id}>{text}</option>)}</select></label>;
 }
 function EventList() {
-  const [filters, setFilters] = useState(initialFilters);
+  const [filters, setFilters] = useState(() => {
+    const query = new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search);
+    return { ...initialFilters, category: query.get('category') || '', city: query.get('city') || '' };
+  });
   const [events, setEvents] = useState(null);
   const [page, setPage] = useState(1);
   const [error, setError] = useState('');
@@ -31,7 +35,7 @@ function EventList() {
   const available = useMemo(() => events || [], [events]);
   const filtered = useMemo(() => filterEvents(available, filters, today), [available, filters, today]);
   const recommendations = suggestions(available, filters.search);
-  const options = field => [...new Set(available.map(event => event[field]).filter(Boolean))].sort().map(value => [value, value]);
+  const options = field => [...new Set([filters[field], ...available.map(event => event[field])].filter(Boolean))].sort().map(value => [value, value]);
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const currentPage = Math.min(page, totalPages);
   const change = (field, value) => { setFilters(previous => ({ ...previous, [field]: value })); setPage(1); };
@@ -58,7 +62,7 @@ function EventList() {
             const banner = safeWebUrl(event.bannerUrl || event.thumbnailUrl);
             return <article className={styles.eventCard} key={event.id}>
               <div className={styles.eventImage} style={banner ? { backgroundImage:`url("${banner.replaceAll('"','%22')}")` } : undefined}><span>{event.category || 'Community event'}</span></div>
-              <div className={styles.eventBody}><p className={styles.muted}>{eventDate(event.startDate)} · {eventTime(event.startTime)} · {event.eventType}</p><h2>{event.title}</h2><p>{event.shortDescription || event.description || 'See event details.'}</p><p className={styles.muted}>{[event.venueName,event.city].filter(Boolean).join(' · ') || (event.eventType === 'ONLINE' ? 'Online' : 'Venue to be announced')}</p><div className={styles.eventFooter}><strong>{priceLabel(event)}</strong><Link className={styles.primary} href={`/events/${encodeURIComponent(event.id)}`}>View details →</Link></div></div>
+              <div className={styles.eventBody}><p className={styles.muted}>{eventDate(event.startDate)} · {eventTime(event.startTime)} · {event.eventType}</p><h2>{event.title}</h2><p>{event.shortDescription || event.description || 'See event details.'}</p><p className={styles.muted}>{[event.venueName,event.city].filter(Boolean).join(' · ') || (event.eventType === 'ONLINE' ? 'Online' : 'Venue to be announced')}</p><div className={styles.eventFooter}><strong>{priceLabel(event)}</strong><Heart event={event}/><Link className={styles.primary} href={`/events/${encodeURIComponent(event.id)}`}>View details →</Link></div></div>
             </article>;
           })}</div>
           {filtered.length > 0 && <div className={styles.pagination}><button className={styles.primary} disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>Previous</button><span>Page {currentPage} of {totalPages}</span><button className={styles.primary} disabled={currentPage === totalPages} onClick={() => setPage(currentPage + 1)}>Next</button></div>}

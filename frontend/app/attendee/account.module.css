@@ -41,3 +41,40 @@
 @media(max-width:430px){.filters{grid-template-columns:1fr}.searchBox{grid-column:auto}.pagination{gap:8px}.pagination button{padding:10px}}
 @media(max-width:800px){.authLayout{grid-template-columns:1fr;gap:28px;}}
 @media (max-width: 500px) { .page { padding: 16px; } .card { padding: 22px; margin: 28px auto; } }
+
+/* Attendee navigation, account disclosure and home discovery surfaces. */
+.nav { align-items: center; gap: 10px; }
+.iconBtn, .avatar { display: inline-grid; place-items: center; width: 42px; height: 42px; flex-shrink: 0; border-radius: 50%; cursor: pointer; font: inherit; }
+.iconBtn { background: #151e32; border: 1px solid #34415d; color: #dcd8ff; }
+.iconBtn:hover, .iconBtn[aria-pressed=true] { background: #31274e; color: #e3b6ff; }
+.avatar { border: 1px solid #c6befa; background: linear-gradient(135deg,#c0f5df,#bab2ff); color: #231c47; font-weight: 800; }
+.menuWrap { position: relative; }
+.popover { position: absolute; z-index: 20; right: 0; top: calc(100% + 12px); width: min(268px,90vw); border: 1px solid #384661; border-radius: 16px; padding: 10px; background: #172137; box-shadow: 0 15px 50px #0008; }
+.identity, .popover a, .popover button { display: flex; align-items: center; gap: 12px; padding: 12px; }
+.identity { border-bottom: 1px solid #35415a; margin-bottom: 6px; overflow-wrap: anywhere; }
+.identity small { display: block; margin-top: 3px; color: #b4c1d9; }
+.popover a, .popover button { color: #ecebff; background: none; border: none; width: 100%; border-radius: 8px; font: inherit; cursor: pointer; text-decoration: none; }
+.popover a:hover, .popover button:hover { background: #26324b; }
+.popover button { margin-top: 8px; border-top: 1px solid #35415a; }
+.hero { position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; min-height: 275px; padding: clamp(24px,5vw,58px); border-radius: 24px; border: 1px solid #544c85; background: radial-gradient(ellipse at 82% 120%, #8552c2 0, transparent 55%), linear-gradient(108deg,#1a1736 10%,#39316a 70%,#224069); }
+.heroLabel { color: #d9cafa; margin-bottom: 18px; font-size: .85rem; }
+.hero h1 { font-size: clamp(2rem,5vw,4rem); line-height: 1.03; letter-spacing: -.045em; }
+.heroLink { display: inline-flex; gap: 20px; background: #efeaff; color: #23183d; border-radius: 30px; padding: 11px 18px; font-weight: 700; }
+.sound { position: absolute; z-index: -1; right: -3%; top: 12%; width: 49%; height: 80%; display: flex; align-items: center; gap: 1%; transform: rotate(-9deg); }
+.sound i { flex: 1; border-radius: 20px; background: linear-gradient(#acffff,#b7a1ff 56%,#e99ad6); box-shadow: 0 0 12px #c68efd30; animation: pulse 4.8s ease-in-out infinite alternate; }
+@keyframes pulse { from { transform: scaleY(.76); } to { transform: scaleY(1); } }
+@media(prefers-reduced-motion:reduce) { .sound i { animation: none; } }
+.strip { margin: 34px 0; }
+.strip h2 { font-size: clamp(20px,3vw,26px); margin-bottom: 14px; letter-spacing: -.025em; }
+.chips, .sectionHead, .setting { display: flex; align-items: center; gap: 12px; }
+.chips { flex-wrap: wrap; }
+.chips a { display: inline-flex; align-items: center; gap: 6px; background: #1a223a; border: 1px solid #384362; color: #ece8ff; padding: 9px 17px; border-radius: 22px; }
+.chips a:hover { background: #302750; }
+.quiet { background: #10192b; border-left: 3px solid #7164aa; padding: 18px 20px; border-radius: 0 12px 12px 0; color: #bac5da; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,210px),1fr)); gap: 14px; }
+.tile { position: relative; border: 1px solid #33415e; border-radius: 14px; background: #131c30; overflow: hidden; }
+.tileImage { height: 100px; background: linear-gradient(130deg,#4b437a,#274558); background-size: cover; background-position: center; }
+.tile a { display: block; }.tile a > div:last-child { padding: 14px; }.tile small { color: #bbc4db; }.tile h3 { margin-top: 5px; }.tile button { position: absolute; top: 8px; right: 8px; }
+.sectionHead, .setting { justify-content: space-between; }.setting { padding: 18px 0; border-bottom: 1px solid #35415a; }.setting span { color: #c6baff; }
+.details div { padding: 14px 0; border-bottom: 1px solid #2d3952; }.details dt { color: #b7c4db; font-size: .85rem; }.details dd { margin: 6px 0 0; overflow-wrap: anywhere; }
+@media(max-width:540px) { .sound { opacity: .45; width: 36%; } .nav { gap: 4px; } .header { gap: 10px; } .hero { min-height: 230px; } }

@@ -2,11 +2,13 @@
 'use client';
 
 import { useState } from 'react';
+import Icon from '../attendee/Icon';
 import Workspace from '../attendee/Workspace';
 import { attendeeRequest } from '../attendee/api';
 import styles from '../attendee/account.module.css';
 
 function ProfileForm({ profile, onUpdate }) {
+  const [editing, setEditing] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -26,7 +28,7 @@ function ProfileForm({ profile, onUpdate }) {
       const result = await attendeeRequest(passwordChange ? '/password' : '/me',
         passwordChange ? 'POST' : 'PUT', data);
       if (passwordChange) window.location.replace('/user-login');
-      else { onUpdate(result); setMessage('Profile saved.'); }
+      else { onUpdate(result); setEditing(false); setMessage('Profile saved.'); }
     } catch (failure) {
       if (failure.status === 401) window.location.replace('/user-login');
       else setError(failure.message);
@@ -38,15 +40,20 @@ function ProfileForm({ profile, onUpdate }) {
     <p className={styles.muted}>Manage your personal information and password.</p>
     <div className={styles.grid}>
       <section className={styles.panel}>
-        <h2>Personal details</h2>
-        <p className={styles.muted}>{profile.email}</p>
-        <form className={styles.form} onSubmit={event => save(event)}>
-          <label>Full name<input name="fullName" defaultValue={profile.fullName} maxLength={100} required /></label>
-          <label>Phone number<input name="phone" type="tel" defaultValue={profile.phone || ''} maxLength={30} /></label>
+        <div className={styles.sectionHead}><h2>Personal details</h2>
+          {!editing && <button aria-label="Edit personal details" title="Edit personal details" className={styles.iconBtn} onClick={() => { setEditing(true); setMessage(''); }}><Icon name="edit"/></button>}
+        </div>
+        {editing ? <form className={styles.form} onSubmit={event => save(event)}>
+          <label>Full name<input autoFocus name="fullName" defaultValue={profile.fullName} maxLength={100} required /></label>
+          <label>Phone number<input name="phone" autoComplete="tel" type="tel" defaultValue={profile.phone || ''} maxLength={30} /></label>
+          <label>Location (city)<input name="location" autoComplete="address-level2" defaultValue={profile.location || ''} maxLength={100}/></label>
+          <label>Address<input name="address" autoComplete="street-address" defaultValue={profile.address || ''} maxLength={240}/></label>
           <button className={styles.primary} disabled={busy}>Save changes</button>
-        </form>
+          <button type="button" className={styles.textButton} disabled={busy} onClick={() => { setEditing(false); setError(''); }}>Cancel</button>
+        </form> : <dl className={styles.details}>{[['Full name','fullName'],['Verified email','email'],['Phone number','phone'],['Location (city)','location'],['Address','address']].map(([label,key]) =>
+          <div id={key} key={key}><dt>{label}</dt><dd>{profile[key] || 'Not provided'}</dd></div>)}</dl>}
       </section>
-      <section className={styles.panel}>
+      {editing && <section className={styles.panel}>
         <h2>Change password</h2>
         <form className={styles.form} onSubmit={event => save(event, true)}>
           <label>Current password<input type="password" name="currentPassword" autoComplete="current-password" maxLength={72} required /></label>
@@ -54,7 +61,7 @@ function ProfileForm({ profile, onUpdate }) {
           <label>Confirm new password<input type="password" name="confirmPassword" autoComplete="new-password" minLength={8} maxLength={72} required /></label>
           <button className={styles.primary} disabled={busy}>Change password</button>
         </form>
-      </section>
+      </section>}
     </div>
     {message && <p className={styles.status} role="status">{message}</p>}
     {error && <p className={styles.error} role="alert">{error}</p>}

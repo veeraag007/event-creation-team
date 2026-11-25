@@ -3,6 +3,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { Heart } from '../../attendee/Favorites';
 import Workspace from '../../attendee/Workspace';
 import { eventDetails, eventDate, eventTime, priceLabel, safeWebUrl } from '../../attendee/eventsApi';
 import styles from '../../attendee/account.module.css';
@@ -26,7 +27,7 @@ function Details({ id }) {
     {banner && <div className={styles.banner} role="img" aria-label={`${event.title} banner`} style={{ backgroundImage: `url("${banner.replaceAll('"', '%22')}")` }} />}
     <section className={styles.panel}>
       <p className={styles.muted}>{event.category || 'Community event'}</p>
-      <h1>{event.title}</h1>
+      <h1>{event.title}</h1><Heart event={event}/>
       <p className={styles.muted}>{event.description || 'Event description to be announced.'}</p>
     </section>
     <div className={styles.grid}>

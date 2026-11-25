@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,10 +37,13 @@ public class AttendeeController {
                         @NotBlank @Size(max = 72) String password,
                         @Size(max = 6) String code) {}
     public record Profile(@NotBlank @Size(max = 100) String fullName,
-                          @Size(max = 30) String phone) {}
+                          @Size(max = 30) String phone, @Size(max = 100) String location,
+                          @Size(max = 240) String address) {}
     public record PasswordChange(@NotBlank @Size(max = 72) String currentPassword,
                                  @NotBlank @Size(min = 8, max = 72) String newPassword) {}
-    public record AttendeeProfile(String id, String fullName, String email, String phone) {}
+    public record AttendeeProfile(String id, String fullName, String email, String phone, String location,
+                                  String address, boolean notificationsEnabled) {}
+    public record Preferences(@NotNull Boolean notificationsEnabled) {}
 
     private static String normalize(String email) {
         return email.trim().toLowerCase(Locale.ROOT);
@@ -57,7 +61,8 @@ public class AttendeeController {
     private ResponseEntity<AttendeeProfile> profile(Attendee attendee) {
         return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(
                 new AttendeeProfile(attendee.getId(), attendee.getFullName(),
-                        attendee.getEmail(), attendee.getPhone()));
+                        attendee.getEmail(), attendee.getPhone(), attendee.getLocation(), attendee.getAddress(),
+                        attendee.notificationsEnabled()));
     }
 
     private Attendee current(HttpServletRequest request) {
@@ -122,15 +127,55 @@ public class AttendeeController {
         return attendee == null ? error(401, "Sign in first.") : profile(attendee);
     }
 
+    @Transactional
     @PutMapping(value = "/me", consumes = "application/json")
     public ResponseEntity<?> update(@Valid @RequestBody Profile details, HttpServletRequest request) {
         Attendee attendee = current(request);
         if (attendee == null) return error(401, "Sign in first.");
         attendee.updateProfile(details.fullName().trim(),
-                details.phone() == null ? "" : details.phone().trim());
+                details.phone() == null ? "" : details.phone().trim(), details.location(), details.address());
         return profile(repository.saveAndFlush(attendee));
     }
 
+    @Transactional
+    @PutMapping(value = "/preferences", consumes = "application/json")
+    public ResponseEntity<?> preferences(@Valid @RequestBody Preferences preferences, HttpServletRequest request) {
+        Attendee attendee = current(request);
+        if (attendee == null) return error(401, "Sign in first.");
+        attendee.setNotificationsEnabled(preferences.notificationsEnabled());
+        return profile(repository.saveAndFlush(attendee));
+    }
+
+    @GetMapping("/wishlist")
+    public ResponseEntity<?> wishlist(HttpServletRequest request) {
+        Attendee attendee = current(request);
+        if (attendee == null) return error(401, "Sign in first.");
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(repository.favorites(attendee.getId()));
+    }
+
+    @GetMapping("/top-events")
+    public ResponseEntity<?> topEvents(HttpServletRequest request) {
+        if (current(request) == null) return error(401, "Sign in first.");
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(repository.rankedFavorites());
+    }
+
+    @PutMapping(value = "/wishlist/{event}", consumes = "application/json")
+    public ResponseEntity<?> favorite(@PathVariable UUID event, HttpServletRequest request) {
+        Attendee attendee = current(request);
+        if (attendee == null) return error(401, "Sign in first.");
+        repository.addFavorite(attendee.getId(), event);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/wishlist/{event}")
+    public ResponseEntity<?> unfavorite(@PathVariable UUID event, HttpServletRequest request) {
+        Attendee attendee = current(request);
+        if (attendee == null) return error(401, "Sign in first.");
+        repository.removeFavorite(attendee.getId(), event);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Transactional
     @PostMapping(value = "/password", consumes = "application/json")
     public ResponseEntity<?> changePassword(@Valid @RequestBody PasswordChange change,
                                             HttpServletRequest request) {
