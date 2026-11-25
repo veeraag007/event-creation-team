@@ -29,7 +29,7 @@ export default function AccountForm({ signup = false, admin = false }) {
       }
       setPending(null);
       if (signup) setComplete(result);
-      else router.replace(admin ? '/admin/dashboard' : '/home');
+      else router.replace(admin ? '/admin/setup' : '/home');
     } catch (failure) { setError(failure.message || 'Could not connect to the server.'); }
     finally { setBusy(false); }
   }
