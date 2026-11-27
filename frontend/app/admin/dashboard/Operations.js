@@ -2,10 +2,9 @@
 'use client';
 import {useState} from 'react';
 import {accountRequest} from '../../attendee/api';
-import s from '../setup/workspace.module.css';
-const views=['Events','Calendar','Attendees','Registrations','Event performance'];
-export default function Operations({data,update}){
- const [view,setView]=useState(views[0]),[error,setError]=useState(''),[busy,setBusy]=useState(false);
+import s from './dashboard.module.css';
+export default function Operations({data,update,view}){
+ const [error,setError]=useState(''),[busy,setBusy]=useState(false);
  const [month,setMonth]=useState(()=>new Date().toISOString().slice(0,7));
  async function save(e){
    e.preventDefault();const form=e.currentTarget;const payload=Object.fromEntries(new FormData(form));
@@ -16,8 +15,7 @@ export default function Operations({data,update}){
  }
  const selection=(label,name,items)=><label>{label}<select name={name} required>{items.map(([id,text])=><option key={id} value={id}>{text}</option>)}</select></label>;
  const options=values=>values.map(v=>[v,v]);
- return <section className={s.panel}><nav aria-label="Organization operations">{views.map(v=><button key={v} aria-pressed={v===view} onClick={()=>{setView(v);setError('');}}>{v}</button>)}</nav>
- <h2>{view}</h2>{error&&<p role="alert">{error}</p>}
+ return <section className={s.panel}><h1>{view}</h1>{error&&<p role="alert">{error}</p>}
  {['Events','Attendees','Registrations'].includes(view)&&<form className={s.operations} key={view} onSubmit={save}>
  {view==='Events'&&<><label>Event name<input required maxLength={180} name="name"/></label><label>Start date<input type="date" required name="date"/></label><label>Venue<input maxLength={180} name="venue" defaultValue={data.organization.hall}/></label>{selection('Event status','status',options(['Upcoming','Active','Completed','Cancelled']))}</>}
  {view==='Attendees'&&<><label>Full name<input required name="name" maxLength={120}/></label><label>Email<input required type="email" name="email" maxLength={254}/></label></>}
